@@ -68,6 +68,65 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Dp题目-通配符匹配" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/14/Dp%E9%A2%98%E7%9B%AE-%E9%80%9A%E9%85%8D%E7%AC%A6%E5%8C%B9%E9%85%8D/" class="article-date">
+  <time datetime="2020-06-14T13:57:50.000Z" itemprop="datePublished">2020-06-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/14/Dp%E9%A2%98%E7%9B%AE-%E9%80%9A%E9%85%8D%E7%AC%A6%E5%8C%B9%E9%85%8D/">Dp题目 通配符匹配</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>思路:</p>
+<p>思路一: 利用两个指针进行遍历。</p>
+<p>在代码里解释.</p>
+<p>时间复杂度为:O(mn)O(mn)O(mn)</p>
+<p>思路二: 动态规划</p>
+<p>dp[i][j]表示s到i位置,p到j位置是否匹配!</p>
+<p>初始化:</p>
+<pre><code>dp[0][0]:什么都没有,所以为true
+第一行dp[0][j],换句话说,s为空,与p匹配,所以只要p开始为*才为true
+第一列dp[i][0],当然全部为False</code></pre><p>动态方程:</p>
+<pre><code>如果(s[i] == p[j] || p[j] == &quot;?&quot;) &amp;&amp; dp[i-1][j-1] ,有dp[i][j] = true
+
+如果p[j] == &quot;*&quot; &amp;&amp; (dp[i-1][j] = true || dp[i][j-1] = true) 有dp[i][j] = true
+
+​ note:
+
+​ dp[i][j-1],表示*代表是空字符,例如ab,ab*
+
+​ dp[i-1][j],表示*代表非空任何字符,例如abcd,ab*</code></pre><p>​</p>
+<p>class Solution {<br>    public boolean isMatch(String s, String p) {<br>        int sn = s.length();<br>        int pn = p.length();<br>        int i = 0;<br>        int j = 0;<br>        int start = -1;<br>        int match = 0;<br>        while (i &lt; sn) {<br>            if (j &lt; pn &amp;&amp; (s.charAt(i) == p.charAt(j) || p.charAt(j) == ‘?’)) {<br>                i++;<br>                j++;<br>            } else if (j &lt; pn &amp;&amp; p.charAt(j) == ‘<em>‘) {<br>                start = j;<br>                match = i;<br>                j++;<br>            } else if (start != -1) {<br>                j = start + 1;<br>                match++;<br>                i = match;<br>            } else {<br>                return false;<br>            }<br>        }<br>        while (j &lt; pn) {<br>//plan b<br>class Solution {<br>    public boolean isMatch(String s, String p) {<br>        boolean[][] dp = new boolean[s.length() + 1][p.length() + 1];<br>        dp[0][0] = true;<br>        for (int j = 1; j &lt; p.length() + 1; j++) {<br>            if (p.charAt(j - 1) == ‘</em>‘) {<br>                dp[0][j] = dp[0][j - 1];<br>            }<br>        }<br>        for (int i = 1; i &lt; s.length() + 1; i++) {<br>            for (int j = 1; j &lt; p.length() + 1; j++) {<br>                if (s.charAt(i - 1) == p.charAt(j - 1) || p.charAt(j - 1) == ‘?’) {<br>                    dp[i][j] = dp[i - 1][j - 1];<br>                } else if (p.charAt(j - 1) == ‘*’) {<br>                    dp[i][j] = dp[i][j - 1] || dp[i - 1][j];<br>                }<br>            }<br>        }<br>        return dp[s.length()][p.length()];</p>
+<pre><code>}</code></pre><p>}</p>
+<p>if (p.charAt(j) != ‘*’) return false;<br>            j++;<br>        }<br>        return true;</p>
+<pre><code>}</code></pre><p>}</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/14/Dp%E9%A2%98%E7%9B%AE-%E9%80%9A%E9%85%8D%E7%AC%A6%E5%8C%B9%E9%85%8D/" data-id="ckbf4vvzv0000mdii0ipv5q7r" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-黑客与画家" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/06/14/%E9%BB%91%E5%AE%A2%E4%B8%8E%E7%94%BB%E5%AE%B6/" class="article-date">
@@ -369,6 +428,10 @@
       <ul>
         
           <li>
+            <a href="/2020/06/14/Dp%E9%A2%98%E7%9B%AE-%E9%80%9A%E9%85%8D%E7%AC%A6%E5%8C%B9%E9%85%8D/">Dp题目 通配符匹配</a>
+          </li>
+        
+          <li>
             <a href="/2020/06/14/%E9%BB%91%E5%AE%A2%E4%B8%8E%E7%94%BB%E5%AE%B6/">黑客与画家</a>
           </li>
         
@@ -382,10 +445,6 @@
         
           <li>
             <a href="/2020/05/24/flex-%E5%B8%83%E5%B1%80%E7%9A%84%E4%B8%80%E4%BA%9B%E6%95%B4%E7%90%86%E5%92%8C%E6%8A%80%E5%B7%A7/">flex 布局的一些整理和技巧</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/24/my-first-hexo-blog/">my first hexo blog</a>
           </li>
         
       </ul>

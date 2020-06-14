@@ -5,17 +5,17 @@
   
 
   
-  <title>my first hexo blog | eric_cyr&#39;s blog</title>
+  <title>Dp题目 通配符匹配 | eric_cyr&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="hello world内容 chapter onehexo newhexo cleanhexo gen">
+  <meta name="description" content="思路: 思路一: 利用两个指针进行遍历。 在代码里解释. 时间复杂度为:O(mn)O(mn)O(mn) 思路二: 动态规划 dp[i][j]表示s到i位置,p到j位置是否匹配! 初始化: dp[0][0]:什么都没有,所以为true 第一行dp[0][j],换句话说,s为空,与p匹配,所以只要p开始为*才为true 第一列dp[i][0],当然全部为False动态方程: 如果(s[i] &#x3D;&#x3D; p[">
 <meta property="og:type" content="article">
-<meta property="og:title" content="my first hexo blog">
-<meta property="og:url" content="http://yoursite.com/2020/05/24/my-first-hexo-blog/index.html">
+<meta property="og:title" content="Dp题目 通配符匹配">
+<meta property="og:url" content="http://yoursite.com/2020/06/14/Dp%E9%A2%98%E7%9B%AE-%E9%80%9A%E9%85%8D%E7%AC%A6%E5%8C%B9%E9%85%8D/index.html">
 <meta property="og:site_name" content="eric_cyr&#39;s blog">
-<meta property="og:description" content="hello world内容 chapter onehexo newhexo cleanhexo gen">
+<meta property="og:description" content="思路: 思路一: 利用两个指针进行遍历。 在代码里解释. 时间复杂度为:O(mn)O(mn)O(mn) 思路二: 动态规划 dp[i][j]表示s到i位置,p到j位置是否匹配! 初始化: dp[0][0]:什么都没有,所以为true 第一行dp[0][j],换句话说,s为空,与p匹配,所以只要p开始为*才为true 第一列dp[i][0],当然全部为False动态方程: 如果(s[i] &#x3D;&#x3D; p[">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-05-24T12:55:33.000Z">
-<meta property="article:modified_time" content="2020-05-24T12:57:32.914Z">
+<meta property="article:published_time" content="2020-06-14T13:57:50.000Z">
+<meta property="article:modified_time" content="2020-06-14T13:57:59.525Z">
 <meta property="article:author" content="eric_cyr">
 <meta name="twitter:card" content="summary">
   
@@ -70,10 +70,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-my-first-hexo-blog" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Dp题目-通配符匹配" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/05/24/my-first-hexo-blog/" class="article-date">
-  <time datetime="2020-05-24T12:55:33.000Z" itemprop="datePublished">2020-05-24</time>
+    <a href="/2020/06/14/Dp%E9%A2%98%E7%9B%AE-%E9%80%9A%E9%85%8D%E7%AC%A6%E5%8C%B9%E9%85%8D/" class="article-date">
+  <time datetime="2020-06-14T13:57:50.000Z" itemprop="datePublished">2020-06-14</time>
 </a>
     
   </div>
@@ -84,7 +84,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      my first hexo blog
+      Dp题目 通配符匹配
     </h1>
   
 
@@ -92,13 +92,34 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="hello-world"><a href="#hello-world" class="headerlink" title="hello world"></a>hello world</h3><p>内容</p>
-<h3 id="chapter-one"><a href="#chapter-one" class="headerlink" title="chapter one"></a>chapter one</h3><p>hexo new<br>hexo clean<br>hexo gen</p>
+        <p>思路:</p>
+<p>思路一: 利用两个指针进行遍历。</p>
+<p>在代码里解释.</p>
+<p>时间复杂度为:O(mn)O(mn)O(mn)</p>
+<p>思路二: 动态规划</p>
+<p>dp[i][j]表示s到i位置,p到j位置是否匹配!</p>
+<p>初始化:</p>
+<pre><code>dp[0][0]:什么都没有,所以为true
+第一行dp[0][j],换句话说,s为空,与p匹配,所以只要p开始为*才为true
+第一列dp[i][0],当然全部为False</code></pre><p>动态方程:</p>
+<pre><code>如果(s[i] == p[j] || p[j] == &quot;?&quot;) &amp;&amp; dp[i-1][j-1] ,有dp[i][j] = true
+
+如果p[j] == &quot;*&quot; &amp;&amp; (dp[i-1][j] = true || dp[i][j-1] = true) 有dp[i][j] = true
+
+​ note:
+
+​ dp[i][j-1],表示*代表是空字符,例如ab,ab*
+
+​ dp[i-1][j],表示*代表非空任何字符,例如abcd,ab*</code></pre><p>​</p>
+<p>class Solution {<br>    public boolean isMatch(String s, String p) {<br>        int sn = s.length();<br>        int pn = p.length();<br>        int i = 0;<br>        int j = 0;<br>        int start = -1;<br>        int match = 0;<br>        while (i &lt; sn) {<br>            if (j &lt; pn &amp;&amp; (s.charAt(i) == p.charAt(j) || p.charAt(j) == ‘?’)) {<br>                i++;<br>                j++;<br>            } else if (j &lt; pn &amp;&amp; p.charAt(j) == ‘<em>‘) {<br>                start = j;<br>                match = i;<br>                j++;<br>            } else if (start != -1) {<br>                j = start + 1;<br>                match++;<br>                i = match;<br>            } else {<br>                return false;<br>            }<br>        }<br>        while (j &lt; pn) {<br>//plan b<br>class Solution {<br>    public boolean isMatch(String s, String p) {<br>        boolean[][] dp = new boolean[s.length() + 1][p.length() + 1];<br>        dp[0][0] = true;<br>        for (int j = 1; j &lt; p.length() + 1; j++) {<br>            if (p.charAt(j - 1) == ‘</em>‘) {<br>                dp[0][j] = dp[0][j - 1];<br>            }<br>        }<br>        for (int i = 1; i &lt; s.length() + 1; i++) {<br>            for (int j = 1; j &lt; p.length() + 1; j++) {<br>                if (s.charAt(i - 1) == p.charAt(j - 1) || p.charAt(j - 1) == ‘?’) {<br>                    dp[i][j] = dp[i - 1][j - 1];<br>                } else if (p.charAt(j - 1) == ‘*’) {<br>                    dp[i][j] = dp[i][j - 1] || dp[i - 1][j];<br>                }<br>            }<br>        }<br>        return dp[s.length()][p.length()];</p>
+<pre><code>}</code></pre><p>}</p>
+<p>if (p.charAt(j) != ‘*’) return false;<br>            j++;<br>        }<br>        return true;</p>
+<pre><code>}</code></pre><p>}</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/24/my-first-hexo-blog/" data-id="ckbf4tmuq00027pii37ee73o9" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/14/Dp%E9%A2%98%E7%9B%AE-%E9%80%9A%E9%85%8D%E7%AC%A6%E5%8C%B9%E9%85%8D/" data-id="ckbf4vvzv0000mdii0ipv5q7r" class="article-share-link">Share</a>
       
       
     </footer>
@@ -107,19 +128,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/05/24/flex-%E5%B8%83%E5%B1%80%E7%9A%84%E4%B8%80%E4%BA%9B%E6%95%B4%E7%90%86%E5%92%8C%E6%8A%80%E5%B7%A7/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          flex 布局的一些整理和技巧
-        
-      </div>
-    </a>
   
-  
-    <a href="/2020/05/24/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/06/14/%E9%BB%91%E5%AE%A2%E4%B8%8E%E7%94%BB%E5%AE%B6/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Hello World</div>
+      <div class="article-nav-title">黑客与画家</div>
     </a>
   
 </nav>
