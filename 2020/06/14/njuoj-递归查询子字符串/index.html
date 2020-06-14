@@ -5,15 +5,17 @@
   
 
   
-  <title>flex 布局的一些整理和技巧 | eric_cyr&#39;s blog</title>
+  <title>njuoj 递归查询子字符串 | eric_cyr&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="article">
-<meta property="og:title" content="flex 布局的一些整理和技巧">
-<meta property="og:url" content="http://yoursite.com/2020/05/24/flex-%E5%B8%83%E5%B1%80%E7%9A%84%E4%B8%80%E4%BA%9B%E6%95%B4%E7%90%86%E5%92%8C%E6%8A%80%E5%B7%A7/index.html">
+  <meta name="description" content="思路：每次将pos映射到对称区间的相应位置。直到达到[1,5]区间 其中需要注意的是，需要找到$的分布规律。单独处理 package com.company.dp; import java.util.ArrayList;import java.util.List;import java.util.Scanner; public class 递归查询子字符串 {    public static">
+<meta property="og:type" content="article">
+<meta property="og:title" content="njuoj 递归查询子字符串">
+<meta property="og:url" content="http://yoursite.com/2020/06/14/njuoj-%E9%80%92%E5%BD%92%E6%9F%A5%E8%AF%A2%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/index.html">
 <meta property="og:site_name" content="eric_cyr&#39;s blog">
+<meta property="og:description" content="思路：每次将pos映射到对称区间的相应位置。直到达到[1,5]区间 其中需要注意的是，需要找到$的分布规律。单独处理 package com.company.dp; import java.util.ArrayList;import java.util.List;import java.util.Scanner; public class 递归查询子字符串 {    public static">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-05-24T13:26:48.000Z">
-<meta property="article:modified_time" content="2020-06-14T13:42:49.710Z">
+<meta property="article:published_time" content="2020-06-14T14:01:44.000Z">
+<meta property="article:modified_time" content="2020-06-14T14:01:50.437Z">
 <meta property="article:author" content="eric_cyr">
 <meta name="twitter:card" content="summary">
   
@@ -68,10 +70,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-flex-布局的一些整理和技巧" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-njuoj-递归查询子字符串" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/05/24/flex-%E5%B8%83%E5%B1%80%E7%9A%84%E4%B8%80%E4%BA%9B%E6%95%B4%E7%90%86%E5%92%8C%E6%8A%80%E5%B7%A7/" class="article-date">
-  <time datetime="2020-05-24T13:26:48.000Z" itemprop="datePublished">2020-05-24</time>
+    <a href="/2020/06/14/njuoj-%E9%80%92%E5%BD%92%E6%9F%A5%E8%AF%A2%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/" class="article-date">
+  <time datetime="2020-06-14T14:01:44.000Z" itemprop="datePublished">2020-06-14</time>
 </a>
     
   </div>
@@ -82,7 +84,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      flex 布局的一些整理和技巧
+      njuoj 递归查询子字符串
     </h1>
   
 
@@ -90,11 +92,44 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p> 思路：每次将pos映射到对称区间的相应位置。直到达到[1,5]区间</p>
+<p>其中需要注意的是，需要找到$的分布规律。单独处理</p>
+<p>package com.company.dp;</p>
+<p>import java.util.ArrayList;<br>import java.util.List;<br>import java.util.Scanner;</p>
+<p>public class 递归查询子字符串 {<br>    public static void main(String[] args) {<br>        Scanner scanner=new Scanner(System.in);<br>        int case_num=Integer.parseInt(scanner.nextLine());<br>        for (int i = 0; i &lt; case_num; i++) {<br>            long pos=Long.parseLong(scanner.nextLine());<br>            char res=getNum(pos);<br>            System.out.println(res);<br>        }<br>        scanner.close();<br>    }</p>
+<pre><code>private static char getNum(long pos) {
+    long[] s=new long[50];
+    s[0]=5;
+    for (int i = 1; i &lt; s.length; i++) {
+        s[i]=s[i-1]*2+i;
+
+    }
+    for (int i = 0; i &lt; s.length; i++) {
+        System.out.println(s[i]);
+    }
+
+    String str0=&quot;12345&quot;;
+
+    while(pos&gt;5){
+        for (int i = 1; i &lt; s.length; i++) {
+            if(pos&gt;=s[i-1]&amp;&amp;pos&lt;=s[i]){
+
+                if(2*pos-s[i]&gt;=0&amp;&amp;2*pos-s[i]&lt;=i)return &apos;$&apos;;
+                pos=s[i]-pos+1;
+                break;
+            }
+
+        }
+
+    }
+    return str0.charAt(((int) pos)-1);
+
+}</code></pre><p>}</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/24/flex-%E5%B8%83%E5%B1%80%E7%9A%84%E4%B8%80%E4%BA%9B%E6%95%B4%E7%90%86%E5%92%8C%E6%8A%80%E5%B7%A7/" data-id="ckbf516z10001meiiexsjb335" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/14/njuoj-%E9%80%92%E5%BD%92%E6%9F%A5%E8%AF%A2%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/" data-id="ckbf516z50005meii86qrf6kl" class="article-share-link">Share</a>
       
       
     </footer>
@@ -103,19 +138,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/06/01/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B-curry%E5%8C%96/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          函数式编程---curry化
-        
-      </div>
-    </a>
   
-  
-    <a href="/2020/05/24/my-first-hexo-blog/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/06/14/foo-bar-%E7%9A%84%E6%95%85%E4%BA%8B/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">my first hexo blog</div>
+      <div class="article-nav-title">foo bar 的故事</div>
     </a>
   
 </nav>
