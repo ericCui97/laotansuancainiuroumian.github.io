@@ -68,6 +68,103 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-vue-组件通信" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/22/vue-%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1/" class="article-date">
+  <time datetime="2020-06-22T08:01:09.000Z" itemprop="datePublished">2020-06-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/22/vue-%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1/">vue 组件通信</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="vue的组件通信"><a href="#vue的组件通信" class="headerlink" title="vue的组件通信"></a>vue的组件通信</h1><h2 id="父子组件的通信"><a href="#父子组件的通信" class="headerlink" title="父子组件的通信"></a>父子组件的通信</h2><h3 id="prop-和events"><a href="#prop-和events" class="headerlink" title="prop 和events"></a>prop 和events</h3><p>note：</p>
+<ul>
+<li><p>不应该在一个子组件里面改变props，会改变单项数据流，导致数据流难以理解，如果有这种需求，应该用data，computed接收</p>
+</li>
+<li><p>若props是引用类型，那么子组件对其的修改也会影响到父组件，故若有这种需求，可以用v-model或者.sync 实现</p>
+</li>
+</ul>
+<h3 id="v-model"><a href="#v-model" class="headerlink" title="v-model"></a>v-model</h3><p><code>v-model</code> 是用来在表单控件或者组件上创建双向绑定的，他的本质是 <code>v-bind</code> 和 <code>v-on</code> 的语法糖，在一个组件上使用 <code>v-model</code>，<strong>默认会为组件绑定名为 <code>value</code> 的 <code>prop</code> 和名为 <code>input</code> 的事件</strong>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">base-input</span> <span class="attr">v-model</span>=<span class="string">"input"</span>&gt;</span><span class="tag">&lt;/<span class="name">base-input</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line">        data() &#123;</span><br><span class="line"><span class="actionscript">            <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="actionscript">                input: <span class="string">''</span></span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/script</span><br><span class="line"><span class="actionscript">  <span class="comment">//父组件</span></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;input type&#x3D;&quot;text&quot; :value&#x3D;&quot;currentValue&quot;  @input&#x3D;&quot;handleInput&quot;&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">    export default &#123;</span><br><span class="line">        data() &#123;</span><br><span class="line">            return &#123;</span><br><span class="line">                currentValue: this.value &#x3D;&#x3D;&#x3D; undefined || this.value &#x3D;&#x3D;&#x3D; null ? &#39;&#39;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        props: &#123;</span><br><span class="line">            value: [String, Number],</span><br><span class="line">        &#125;,</span><br><span class="line">        methods: &#123;</span><br><span class="line">            handleInput(event) &#123;</span><br><span class="line">                const value &#x3D; event.target.value;</span><br><span class="line">                this.$emit(&#39;input&#39;, value);</span><br><span class="line">            &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line">&#x2F;&#x2F;子组件</span><br></pre></td></tr></table></figure>
+
+<p>有的时候，model默认绑定value的行为会有冲突，所以这时候vue可以用v-model的选项达到回避这种冲突</p>
+<h3 id="sync"><a href="#sync" class="headerlink" title=".sync"></a>.sync</h3><p><code>.sync</code> 修饰符在 vue 1.x 的版本中就已经提供，1.x 版本中，当子组件改变了一个带有 <code>.sync</code> 的 <code>prop</code> 的值时，会将这个值同步到父组件中的值。这样使用起来十分方便，但问题也十分明显，这样破坏了单向数据流，当应用复杂时，debug 的成本会非常高。</p>
+<p><strong>于是乎</strong>，在vue 2.0中移除了 <code>.sync</code>。但是在实际的应用中，<code>.sync</code> 是有它的应用场景的，所以在 vue 2.3 版本中，又迎来了全新的 <code>.sync</code>。</p>
+<p>新的 <code>.sync</code> 修饰符所实现的已经不再是真正的双向绑定，它的本质和 <code>v-model</code> 类似，只是一种缩写。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;text-document</span><br><span class="line">  v-bind:title&#x3D;&quot;doc.title&quot;</span><br><span class="line">  v-on:update:title&#x3D;&quot;doc.title &#x3D; $event&quot;</span><br><span class="line">&gt;</span><br><span class="line">&lt;&#x2F;text-document&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>sync</code>改写:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;text-document v-bind:title.sync&#x3D;&quot;doc.title&quot;&gt;&lt;&#x2F;text-document&gt;</span><br><span class="line">&#x2F;&#x2F;父组件</span><br><span class="line"></span><br><span class="line">this.$emit(&#39;update:title&#39;, newTitle)</span><br><span class="line">&#x2F;&#x2F;子组件调用</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h3><p>ref特性为子组件赋予一个id引用，通过这个id可以访问组件实例，父组件需要子组件的状态和方法时，可以使用<code>$ref</code>获取</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--父组件--&gt;</span><br><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;base-input ref&#x3D;&quot;baseInput&quot;&gt;&lt;&#x2F;base-input&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">    export default &#123;</span><br><span class="line">        methods: &#123;</span><br><span class="line">        focusInput: function () &#123;</span><br><span class="line">            this.$refs.usernameInput.focus()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--子组件--&gt;</span><br><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;input ref&#x3D;&quot;input&quot;&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">    export default &#123;</span><br><span class="line">    methods: &#123;</span><br><span class="line">        focus: function () &#123;</span><br><span class="line">            this.$refs.input.focus()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>使用 ref 时，有两点需要注意</p>
+<blockquote>
+<ol>
+<li><code>$refs</code> 是作为渲染结果被创建的，所以在初始渲染的时候它还不存在，此时无法无法访问。</li>
+<li><code>$refs</code> 不是响应式的，只能拿到获取它的那一刻子组件实例的状态，所以要避免在模板和计算属性中使用它。</li>
+</ol>
+</blockquote>
+<h4 id="parent-和-children"><a href="#parent-和-children" class="headerlink" title="$parent 和 $children"></a><strong>$parent 和 $children</strong></h4><p><code>$parent</code> 属性可以用来从一个子组件访问父组件的实例，<code>$children</code> 属性 可以获取当前实例的直接子组件。</p>
+<p>看起来使用 <code>$parent</code> 比使用prop传值更加简单灵活，可以随时获取父组件的数据或方法，又不像使用 <code>prop</code> 那样需要提前定义好。但使用 <code>$parent</code> 会导致父组件数据变更后，很难去定位这个变更是从哪里发起的，所以在绝大多数情况下，不推荐使用。</p>
+<p>在有些场景下，两个组件之间可能是父子关系，也可能是更多层嵌套的祖孙关系,这时就可以使用 <code>$parent</code>。</p>
+<p>下面是 element ui 中的组件 el-radio-group 和 组件 el-radio 使用示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt; </span><br><span class="line">&lt;el-radio-group v-model&#x3D;&quot;radio1&quot;&gt;  </span><br><span class="line">  &lt;el-radio :label&#x3D;&quot;3&quot;&gt;备选项&lt;&#x2F;el-radio&gt;  </span><br><span class="line">  &lt;component-1&gt;    </span><br><span class="line">    &lt;el-radio :label&#x3D;&quot;3&quot;&gt;备选项&lt;&#x2F;el-radio&gt;  </span><br><span class="line">  &lt;&#x2F;component-1&gt; </span><br><span class="line">  &lt;&#x2F;el-radio-group&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line">&lt;script&gt; </span><br><span class="line">  export default &#123;    </span><br><span class="line">    data () &#123;     </span><br><span class="line">      return &#123;   </span><br><span class="line">        radio2: 3   </span><br><span class="line">      &#125;;    &#125; </span><br><span class="line">  &#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在 el-radio-group 和 组件 el-radio 通信中， 组件 el-radio 的 value 值需要和 el-radio-group的 <code>v-model</code> 的值进行“绑定”，我们就可以在 el-radio 内借助 <code>$parent</code> 来访问到 el-radio-group 的实例，来获取到 el-radio-group 中 <code>v-model</code> 绑定的值。</p>
+<p>下面是获取 el-radio 组件中获取 el-radio-group 实例的源码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// el-radio组件    </span></span><br><span class="line"><span class="keyword">let</span> parent = <span class="keyword">this</span>.$parent; </span><br><span class="line"><span class="keyword">while</span> (parent) &#123;   </span><br><span class="line">  <span class="keyword">if</span> (parent.$options.componentName !== <span class="string">'ElRadioGroup'</span>) &#123;     </span><br><span class="line">    parent = parent.$parent;    </span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;      </span><br><span class="line">    <span class="keyword">this</span>._radioGroup = parent; <span class="comment">// this._radioGroup 为组件 el-radio-group 的实例   </span></span><br><span class="line">  &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="非父子组件的通信"><a href="#非父子组件的通信" class="headerlink" title="非父子组件的通信"></a>非父子组件的通信</h2><p><code>$attr</code> <code>$listener</code></p>
+<figure class="highlight plain"><figcaption><span>```inject```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### eventBus</span><br><span class="line"></span><br><span class="line">eventBus 可以实现任意两个组件之前的通信</span><br><span class="line"></span><br><span class="line">原理：在两个组件内部都引入同一个vue实例，然后再两个组件中分别调用这个实例的事件触发和监听实现通信</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;js</span><br><span class="line">import Vue from &#39;vue&#39;</span><br><span class="line">export default new Vue()</span><br><span class="line">&#x2F;&#x2F;eventbus.js</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">import</span> bus <span class="keyword">from</span> <span class="string">'eventbus.js'</span></span></span><br><span class="line"><span class="javascript">  <span class="keyword">export</span> <span class="keyword">default</span>&#123;</span></span><br><span class="line">    methods:&#123;</span><br><span class="line">sayHello()&#123;</span><br><span class="line"><span class="actionscript">  bus.$emit(<span class="string">'sayhello'</span>,<span class="string">'hello'</span>)</span></span><br><span class="line">&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"><span class="actionscript">  <span class="comment">//componentA</span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">  import bus from &#39;eventbus.js&#39;</span><br><span class="line">  export default&#123;</span><br><span class="line">    created()&#123;</span><br><span class="line">     bus.$on(&#39;sayhello&#39;,target&#x3D;&gt;&#123;</span><br><span class="line">       console.log(target) &#x2F;&#x2F;&#x3D;&gt;&#39;hello&#39;</span><br><span class="line">&#125;)</span><br><span class="line">      </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">  &#125;</span><br><span class="line">  &#x2F;&#x2F;componentb</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="root"><a href="#root" class="headerlink" title="root"></a>root</h3><p>通过this.$root拿到当前组件树的根实例</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/22/vue-%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1/" data-id="ckbq7olqw0008s31lgvoj44xg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-njuoj-递归查询子字符串" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/06/14/njuoj-%E9%80%92%E5%BD%92%E6%9F%A5%E8%AF%A2%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/" class="article-date">
@@ -127,7 +224,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/14/njuoj-%E9%80%92%E5%BD%92%E6%9F%A5%E8%AF%A2%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/" data-id="ckbf516z50005meii86qrf6kl" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/14/njuoj-%E9%80%92%E5%BD%92%E6%9F%A5%E8%AF%A2%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/" data-id="ckbq7olqu0005s31lbc1j89y8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -168,7 +265,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/14/foo-bar-%E7%9A%84%E6%95%85%E4%BA%8B/" data-id="ckbf516z30002meii7rc0axqs" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/14/foo-bar-%E7%9A%84%E6%95%85%E4%BA%8B/" data-id="ckbq7olqu0004s31lb549gmd4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -251,7 +348,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/14/pwa/" data-id="ckbf516z60006meii7pysb1on" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/14/pwa/" data-id="ckbq7olqv0006s31la8yp1v7f" class="article-share-link">Share</a>
       
       
     </footer>
@@ -287,7 +384,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/14/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/" data-id="ckbf516z80009meii7dk6dtam" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/14/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/" data-id="ckbq7olqx0009s31lglu9es3z" class="article-share-link">Share</a>
       
       
     </footer>
@@ -346,7 +443,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/14/Dp%E9%A2%98%E7%9B%AE-%E9%80%9A%E9%85%8D%E7%AC%A6%E5%8C%B9%E9%85%8D/" data-id="ckbf516yw0000meii2qd3f0a3" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/14/Dp%E9%A2%98%E7%9B%AE-%E9%80%9A%E9%85%8D%E7%AC%A6%E5%8C%B9%E9%85%8D/" data-id="ckbq7olqn0000s31le1mdaqxn" class="article-share-link">Share</a>
       
       
     </footer>
@@ -417,7 +514,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/14/%E9%BB%91%E5%AE%A2%E4%B8%8E%E7%94%BB%E5%AE%B6/" data-id="ckbf516z9000ameiibbhcg2m4" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/14/%E9%BB%91%E5%AE%A2%E4%B8%8E%E7%94%BB%E5%AE%B6/" data-id="ckbq7olqy000bs31l4gb73968" class="article-share-link">Share</a>
       
       
     </footer>
@@ -457,7 +554,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/14/react-loadable-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/" data-id="ckbf516z70007meiicbod8dag" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/14/react-loadable-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/" data-id="ckbq7olqv0007s31l015799yq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -493,7 +590,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/01/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B-curry%E5%8C%96/" data-id="ckbf516z80008meii5z64few3" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/01/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B-curry%E5%8C%96/" data-id="ckbq7olqx000as31l80kqdzs4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -529,45 +626,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/24/flex-%E5%B8%83%E5%B1%80%E7%9A%84%E4%B8%80%E4%BA%9B%E6%95%B4%E7%90%86%E5%92%8C%E6%8A%80%E5%B7%A7/" data-id="ckbf516z10001meiiexsjb335" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-my-first-hexo-blog" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/24/my-first-hexo-blog/" class="article-date">
-  <time datetime="2020-05-24T12:55:33.000Z" itemprop="datePublished">2020-05-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/24/my-first-hexo-blog/">my first hexo blog</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="hello-world"><a href="#hello-world" class="headerlink" title="hello world"></a>hello world</h3><p>内容</p>
-<h3 id="chapter-one"><a href="#chapter-one" class="headerlink" title="chapter one"></a>chapter one</h3><p>hexo new<br>hexo clean<br>hexo gen</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/24/my-first-hexo-blog/" data-id="ckbf516z50004meiifxi819wo" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/05/24/flex-%E5%B8%83%E5%B1%80%E7%9A%84%E4%B8%80%E4%BA%9B%E6%95%B4%E7%90%86%E5%92%8C%E6%8A%80%E5%B7%A7/" data-id="ckbq7olqr0001s31l0x40ga6v" class="article-share-link">Share</a>
       
       
     </footer>
@@ -613,6 +672,10 @@
       <ul>
         
           <li>
+            <a href="/2020/06/22/vue-%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1/">vue 组件通信</a>
+          </li>
+        
+          <li>
             <a href="/2020/06/14/njuoj-%E9%80%92%E5%BD%92%E6%9F%A5%E8%AF%A2%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/">njuoj 递归查询子字符串</a>
           </li>
         
@@ -626,10 +689,6 @@
         
           <li>
             <a href="/2020/06/14/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/">背包问题总结</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/14/Dp%E9%A2%98%E7%9B%AE-%E9%80%9A%E9%85%8D%E7%AC%A6%E5%8C%B9%E9%85%8D/">Dp题目 通配符匹配</a>
           </li>
         
       </ul>
